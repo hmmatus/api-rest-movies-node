@@ -20,9 +20,9 @@ router.delete("/cinemas/:id", cinema.deleteCinema);
 
 // * Movies
 
-router.get("/cinemas/:id/movies", movies.getAllMovies);
-router.post("/cinemas/:id/movies", movies.addMovie);
-router.post("cinemas/:id/movies/picture", movies.addPicture)
+router.get("/cinemas/:idCinema/movies", movies.getAllMovies);
+router.post("/cinemas/:idCinema/movies", movies.addMovie);
+router.post("cinemas/:idCinema/movies/picture", movies.addPicture)
 router.put("/cinemas/:idCinema/movies/:idMovie", movies.updateMovie);
 router.delete("/cinemas/:idCinema/movies/:idMovie", movies.deleteMovie);
 

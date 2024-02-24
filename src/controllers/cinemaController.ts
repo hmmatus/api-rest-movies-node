@@ -1,4 +1,3 @@
-import admin from "firebase-admin"
 import { CinemaI } from "../models/cinema.model";
 import { firestore } from "../firebase/config";
 const db = firestore;
@@ -8,7 +7,6 @@ export const registerCinemaDB = async (data: CinemaI): Promise<{error?: string} 
     await db.collection("cinemas").doc().set(data);
     return;
   } catch (error) {
-    console.log("🚀 ~ registerCinemaDB ~ error:", error)
     return {
       error: `${error}`
     }
