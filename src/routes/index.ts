@@ -35,7 +35,7 @@ router.put("/cinemas/:idCinema/movies/:idMovie", movies.updateMovie);
 router.delete("/cinemas/:idCinema/movies/:idMovie", movies.deleteMovie);
 
 // * User
-
+router.get("/users", user.getUserData)
 router.post("/users", user.registerUser);
 router.put("/users/:id", user.updateUser);
 router.delete("/users/:id", user.deleteUser);
