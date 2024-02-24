@@ -9,12 +9,12 @@ import { Request, Response } from "express";
 
 const admin = {
   registerAdmin: async (
-    req: Request<{ cinemaId: string }, {}, UserI>,
+    req: Request<{ idCinema: string }, {}, UserI>,
     res: Response
   ) => {
     const data = req.body;
-    const { cinemaId } = req.params;
-    const result = await registerAdminToDB(cinemaId, data);
+    const { idCinema } = req.params;
+    const result = await registerAdminToDB(idCinema, data);
     if (result?.error) {
       return res.status(400).send({
         error: result.error,
@@ -30,11 +30,11 @@ const admin = {
     });
   },
   getAdminData: async (
-    req: Request<{ cinemaId: string; userId: string }, {}, UserI>,
+    req: Request<{ idCinema: string; userId: string }, {}, UserI>,
     res: Response
   ) => {
-    const { userId, cinemaId } = req.params;
-    const result = await getAdminDataFromDb(cinemaId, userId);
+    const { userId, idCinema } = req.params;
+    const result = await getAdminDataFromDb(idCinema, userId);
     if (result?.error) {
       return res.status(400).send({
         error: result.error,
@@ -46,12 +46,12 @@ const admin = {
     });
   },
   updateAdmin: async (
-    req: Request<{ cinemaId: string; userId: string }, {}, {user: UserI}>,
+    req: Request<{ idCinema: string; userId: string }, {}, {user: UserI}>,
     res: Response
   ) => {
-    const { userId, cinemaId } = req.params;
+    const { userId, idCinema } = req.params;
     const {user} = req.body;
-    const result = await updateAdminDataFromDb(cinemaId, userId, user);
+    const result = await updateAdminDataFromDb(idCinema, userId, user);
     if (result?.error) {
       return res.status(400).send({
         error: result.error,
@@ -63,11 +63,11 @@ const admin = {
     });
   },
   deleteAdmin: async (
-    req: Request<{ cinemaId: string; userId: string }, {}, {}>,
+    req: Request<{ idCinema: string; userId: string }, {}, {}>,
     res: Response
   ) => {
-    const { userId, cinemaId } = req.params;
-    const result = await deleteAdminFromDb(cinemaId, userId);
+    const { userId, idCinema } = req.params;
+    const result = await deleteAdminFromDb(idCinema, userId);
     if (result?.error) {
       return res.status(400).send({
         error: result.error,

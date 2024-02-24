@@ -21,10 +21,10 @@ router.delete("/cinemas/:id", cinema.deleteCinema);
 
 // * Admin
 
-router.post("/cinemas/:cinemaId/admins", admin.registerAdmin);
-router.get("/cinemas/:cinemaId/admins/:userId", admin.getAdminData);
-router.put("/cinemas/:cinemaId/admins/:userId", admin.updateAdmin);
-router.delete("/cinemas/:cinemaId/admins/:userId", admin.deleteAdmin)
+router.post("/cinemas/:idCinema/admins", admin.registerAdmin);
+router.get("/cinemas/:idCinema/admins/:userId", admin.getAdminData);
+router.put("/cinemas/:idCinema/admins/:userId", admin.updateAdmin);
+router.delete("/cinemas/:idCinema/admins/:userId", admin.deleteAdmin)
 
 // * Movies
 

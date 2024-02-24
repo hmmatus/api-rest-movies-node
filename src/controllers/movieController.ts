@@ -3,12 +3,12 @@ import { MovieI } from "../models/movie.model";
 const db = firestore;
 
 export const getAllMoviesFromDB = async (
-  cinemaId: string
+  idCinema: string
 ): Promise<{ error?: string; data?: MovieI[] }> => {
   try {
     const snapshot = await db
       .collection("cinemas")
-      .doc(cinemaId)
+      .doc(idCinema)
       .collection("movies")
       .get();
     const movies: MovieI[] = [];
@@ -37,13 +37,13 @@ export const getAllMoviesFromDB = async (
 };
 
 export const addMovieDB = async (
-  cinemaId: string,
+  idCinema: string,
   data: MovieI
 ): Promise<{ error?: string } | void> => {
   try {
     await db
       .collection("cinemas")
-      .doc(cinemaId)
+      .doc(idCinema)
       .collection("movies")
       .doc()
       .set(data);
@@ -56,14 +56,14 @@ export const addMovieDB = async (
 };
 
 export const editMovieDB = async (
-  cinemaId: string,
+  idCinema: string,
   movieId: string,
   data: MovieI
 ): Promise<{ error?: string } | void> => {
   try {
     await db
       .collection("cinemas")
-      .doc(cinemaId)
+      .doc(idCinema)
       .collection("movies")
       .doc(movieId)
       .update({

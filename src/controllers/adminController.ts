@@ -3,7 +3,7 @@ import { UserI } from "../models/user.model";
 const db = firestore;
 
 export const registerAdminToDB = async (
-  cinemaId: string,
+  idCinema: string,
   data: UserI
 ): Promise<{ error?: string } | void> => {
   try {
@@ -16,7 +16,7 @@ export const registerAdminToDB = async (
     if (authRequest) {
       await db
         .collection("cinemas")
-        .doc(cinemaId)
+        .doc(idCinema)
         .collection("admins")
         .doc()
         .set(data);
@@ -30,13 +30,13 @@ export const registerAdminToDB = async (
 };
 
 export const getAdminDataFromDb = async (
-  cinemaId: string,
+  idCinema: string,
   userId: string
 ): Promise<{ error?: string; user?: Partial<UserI> }> => {
   try {
     const snapshot = await db
       .collection("cinemas")
-      .doc(cinemaId)
+      .doc(idCinema)
       .collection("admins")
       .doc(userId)
       .get();
@@ -62,14 +62,14 @@ export const getAdminDataFromDb = async (
 };
 
 export const updateAdminDataFromDb = async (
-  cinemaId: string,
+  idCinema: string,
   userId: string,
   user: UserI
 ): Promise<{ error?: string } | void> => {
   try {
     await db
       .collection("cinemas")
-      .doc(cinemaId)
+      .doc(idCinema)
       .collection("admins")
       .doc(userId)
       .update({ ...user });
@@ -81,14 +81,14 @@ export const updateAdminDataFromDb = async (
 };
 
 export const deleteAdminFromDb = async (
-  cinemaId: string,
+  idCinema: string,
   userId: string,
 ): Promise<{ error?: string } | void> => {
   try {
     await auth.deleteUser(userId);
     await db
       .collection("cinemas")
-      .doc(cinemaId)
+      .doc(idCinema)
       .collection("admins")
       .doc(userId)
       .delete();
