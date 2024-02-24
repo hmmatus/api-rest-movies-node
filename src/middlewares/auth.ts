@@ -1,24 +1,24 @@
-// import { Request, Response, NextFunction } from "express";
-// import jwt from "jsonwebtoken";
+import { Request, Response, NextFunction } from "express";
+import jwt from "jsonwebtoken";
+import admin from "../routes/admin";
+import { auth } from "../firebase/config";
 
-// const verifiedToken = (req: Request, res: Response, next: NextFunction) => {
-//   const token = req.get("Authorization");
+const verifyToken = async (req: Request, res: Response, next: NextFunction) => {
+  const authHeader = req.headers.authorization;
 
-//   if (!token) {
-//     return res.status(401).json({
-//       error: "Authorization token is missing",
-//     });
-//   }
+  if (authHeader) {
+    const idToken = authHeader.split(" ")[1];
+      auth
+      .verifyIdToken(idToken)
+      .then(function (decodedToken) {
+        return next();
+      })
+      .catch(function (error) {
+        return res.sendStatus(403);
+      });
+  } else {
+    res.sendStatus(401);
+  }
+};
 
-//   jwt.verify(token, process.env.SEED!, (error, decoded) => {
-//     if (error) {
-//       return res.status(401).json({
-//         error: "Invalid token",
-//       });
-//     }
-//     req.user = (decoded as { user: any }).user;
-//     next();
-//   });
-// };
-
-// export default verifiedToken;
+export default verifyToken;

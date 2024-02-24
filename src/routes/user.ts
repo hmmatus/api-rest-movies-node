@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { UserI } from "../models/user.model";
 import {
+  deleteUserFromDb,
   getUserDataFromDB,
   registerCustomerToDB,
   updateUserDataFromDb,
@@ -57,8 +58,17 @@ const user = {
       user,
     });
   },
-  deleteUser: async (req: Request<{}, {}, UserI>, res: Response) => {
-
+  deleteUser: async (req: Request<{userId: string}, {}, UserI>, res: Response) => {
+    const { userId } = req.params;
+    const result = await deleteUserFromDb(userId);
+    if (result?.error) {
+      return res.status(400).send({
+        error: result.error,
+      });
+    }
+    return res.send({
+      message: "User deleted successfully",
+    });
   },
 };
 
