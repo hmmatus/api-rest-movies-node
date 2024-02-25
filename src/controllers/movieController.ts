@@ -1,5 +1,6 @@
-import { firestore } from "../firebase/config";
-import { MovieI } from "../models/movie.model";
+import { firestore, storage } from "../firebase/config";
+import { FileI, MovieI } from "../models/movie.model";
+import { v4 as uuidv4 } from "uuid";
 const db = firestore;
 
 export const getAllMoviesFromDB = async (
@@ -89,6 +90,28 @@ export const deleteMovieDB = async (
       .doc(idMovie)
       .delete();
     return;
+  } catch (error) {
+    return {
+      error: `${error}`,
+    };
+  }
+};
+
+export const uploadMovieImg = async (
+  file: FileI
+): Promise<{ error?: string; url?: string }> => {
+  try {
+    const imageBuffer = file.buffer;
+    const imageName = uuidv4();
+    const storageFile = storage.file(imageName);
+    await storageFile.save(imageBuffer, { contentType: "image/jpeg",  });
+    const [url] = await storageFile.getSignedUrl({
+      action: "read",
+      expires: "03-09-2025", // Set an expiration date for the URL
+    });
+    return {
+      url,
+    };
   } catch (error) {
     return {
       error: `${error}`,

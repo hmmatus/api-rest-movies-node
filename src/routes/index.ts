@@ -3,6 +3,9 @@ import cinema from "./cinema";
 import movies from "./movies";
 import user from "./user";
 import admin from "./admin";
+import multer from "multer";
+const storageMulter = multer.memoryStorage(); // Store image data in memory as a Buffer
+const upload = multer({ storage: storageMulter });
 
 const router = express.Router();
 
@@ -30,7 +33,7 @@ router.delete("/cinemas/:idCinema/admins/:userId", admin.deleteAdmin)
 
 router.get("/cinemas/:idCinema/movies", movies.getAllMovies);
 router.post("/cinemas/:idCinema/movies", movies.addMovie);
-router.post("cinemas/:idCinema/movies/picture", movies.addPicture);
+router.post("/cinemas/movies/picture",upload.single("file"), movies.addPicture);
 router.put("/cinemas/:idCinema/movies/:idMovie", movies.updateMovie);
 router.delete("/cinemas/:idCinema/movies/:idMovie", movies.deleteMovie);
 

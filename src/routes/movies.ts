@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { MovieI } from "../models/movie.model";
-import { addMovieDB, deleteMovieDB, editMovieDB, getAllMoviesFromDB } from "../controllers/movieController";
+import { FileI, MovieI } from "../models/movie.model";
+import { addMovieDB, deleteMovieDB, editMovieDB, getAllMoviesFromDB, uploadMovieImg } from "../controllers/movieController";
 
 const movies = {
   getAllMovies: async(req: Request<{idCinema: string}, {},MovieI>, res: Response) => {
@@ -31,27 +31,20 @@ const movies = {
       data
     });
   },
-  addPicture: async(req: Request<{}, {},{file: string}>, res: Response) => {
-    // if (!req.file) {
-    //   res.status(400).send("No file uploaded");
-    // }
-    // try {
-    //   const imageBuffer = req.file.buffer;
-    //   const imageName = uuidv4();
-    //   const file = storage.file(imageName);
-    //   await file.save(imageBuffer, {contentType: "image/jpeg"});
-    //   const [url] = await file.getSignedUrl({
-    //     action: 'read',
-    //     expires: '03-09-2025', // Set an expiration date for the URL
-    //   });
-    //   res.json({
-    //     url,
-    //   });
-    // } catch (error) {
-    //   res.status(400).json({
-    //     error,
-    //   });
-    // }
+  addPicture: async(req: Request<{}, {},{file: FileI}>, res: Response) => {
+    const file = req.file;
+    if (!file) {
+      return res.status(400).send("No file uploaded");
+    }
+    const result = await uploadMovieImg(file);
+    if (result?.error) {
+      return res.status(400).send({
+        error: result.error
+      })
+    }
+    return res.send({
+      url: result.url
+    });
   },
   updateMovie: async(req: Request<{idCinema: string, idMovie: string}, {},MovieI>, res: Response) => {
     const data = req.body;

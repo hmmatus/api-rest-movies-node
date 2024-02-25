@@ -8,3 +8,12 @@ export interface MovieI {
   availability: number;
   likesCount: number;
 }
+
+export interface FileI {
+  fieldname: string;
+  originalname: string;
+  encoding: string;
+  mimetype: string;
+  buffer: Buffer;
+  size: number;
+}
