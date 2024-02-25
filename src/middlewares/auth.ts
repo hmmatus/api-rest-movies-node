@@ -1,6 +1,4 @@
 import { Request, Response, NextFunction } from "express";
-import jwt from "jsonwebtoken";
-import admin from "../routes/admin";
 import { auth } from "../firebase/config";
 
 const verifyToken = async (req: Request, res: Response, next: NextFunction) => {
