@@ -2,7 +2,7 @@
 
 import { Request, Response } from "express";
 import { CinemaI, DeleteCinemaRequestBody, UpdateCinemaRequestBody } from "../models/cinema.model";
-import { deleteCinemaDB, registerCinemaDB, updateCinemaDB } from "../controllers/cinemaController";
+import { deleteCinemaDB, getAllCinemas, registerCinemaDB, updateCinemaDB } from "../controllers/cinemaController";
 
 
 const cinema = {
@@ -42,7 +42,18 @@ const cinema = {
     return res.send({
       message: "Cinema deleted successfully"
     });
-  }
+  },
+  getAllCinemas: async(req: Request<{}, {},{}>, res: Response) => {
+    const result = await getAllCinemas();
+    if (result?.error) {
+      return res.status(400).send({
+        error: result.error
+      })
+    }
+    return res.send({
+      results: result?.results
+    });
+  },
 }
 
 export default cinema;

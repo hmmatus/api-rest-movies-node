@@ -17,7 +17,7 @@ router.get("/", (req: Request<{}, {}, {}>, res: Response) => {
 });
 
 // * Cinema
-
+router.get("/cinemas", cinema.getAllCinemas);
 router.post("/cinemas", cinema.addCinema);
 router.put("/cinemas/:id", cinema.updateCinema);
 router.delete("/cinemas/:id", cinema.deleteCinema);
@@ -42,5 +42,6 @@ router.get("/users", user.getUserData)
 router.post("/users", user.registerUser);
 router.put("/users/:id", user.updateUser);
 router.delete("/users/:id", user.deleteUser);
+// router.post("/users/login", user.loginUser);
 
 export default router;
