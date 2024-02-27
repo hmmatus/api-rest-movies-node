@@ -16,6 +16,7 @@ export const getAllMoviesFromDB = async (
     snapshot.docs.forEach((doc) => {
       const movieData = doc.data();
       const movie = {
+        id: movieData.id,
         title: movieData.title,
         description: movieData.description,
         image: movieData.image,
@@ -29,6 +30,40 @@ export const getAllMoviesFromDB = async (
     });
     return {
       data: movies,
+    };
+  } catch (error) {
+    return {
+      error: `${error}`,
+    };
+  }
+};
+export const getMovieById = async (
+  idCinema: string,
+  movieId: string
+): Promise<{ error?: string; data?: MovieI }> => {
+  try {
+    const snapshot = await db
+      .collection("cinemas")
+      .doc(idCinema)
+      .collection("movies")
+      .doc(movieId)
+      .get();
+      const movieData = snapshot.data();
+      if (!movieData) {
+        throw new Error("Movie doesn't exist")
+      }
+    return {
+      data: {
+        id: movieData.id,
+        title: movieData.title,
+        description: movieData.description,
+        image: movieData.image,
+        stock: movieData.stock,
+        rentAmount: movieData.rentAmount,
+        saleAmount: movieData.saleAmount,
+        availability: movieData.availability,
+        likesCount: movieData.likesCount,
+      }
     };
   } catch (error) {
     return {

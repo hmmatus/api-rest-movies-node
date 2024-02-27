@@ -1,12 +1,24 @@
 import { Request, Response } from "express";
 import { FileI, MovieI } from "../models/movie.model";
-import { addMovieDB, deleteMovieDB, editMovieDB, getAllMoviesFromDB, uploadMovieImg } from "../controllers/movieController";
+import { addMovieDB, deleteMovieDB, editMovieDB, getAllMoviesFromDB, getMovieById, uploadMovieImg } from "../controllers/movieController";
 
 const movies = {
-  getAllMovies: async(req: Request<{idCinema: string}, {},MovieI>, res: Response) => {
+  getAllMovies: async(req: Request<{idCinema: string}, {},{}>, res: Response) => {
     const data = req.body;
     const {idCinema} = req.params;
     const result = await getAllMoviesFromDB(idCinema);
+    if (result?.error) {
+      return res.status(400).send({
+        error: result.error
+      })
+    }
+    return res.send({
+      data: result.data
+    });
+  },
+  getMovieById: async(req: Request<{idCinema: string, idMovie: string}, {},{}>, res: Response) => {
+    const {idCinema, idMovie} = req.params;
+    const result = await getMovieById(idCinema, idMovie);
     if (result?.error) {
       return res.status(400).send({
         error: result.error

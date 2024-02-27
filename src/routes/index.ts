@@ -33,6 +33,7 @@ router.delete("/cinemas/:id", cinema.deleteCinema);
 // * Movies
 
 router.get("/cinemas/:idCinema/movies", movies.getAllMovies);
+router.get("/cinemas/:idCinema/movies/:idMovie", movies.getMovieById);
 router.post("/cinemas/:idCinema/movies", movies.addMovie);
 router.post("/cinemas/movies/picture",upload.single("file"), movies.addPicture);
 router.put("/cinemas/:idCinema/movies/:idMovie", movies.updateMovie);
