@@ -42,12 +42,20 @@ export const addMovieDB = async (
   data: MovieI
 ): Promise<{ error?: string } | void> => {
   try {
+    const result = await db
+      .collection("cinemas")
+      .doc(idCinema)
+      .collection("movies")
+      .add(data);
+
     await db
       .collection("cinemas")
       .doc(idCinema)
       .collection("movies")
-      .doc()
-      .set(data);
+      .doc(result.id)
+      .update({
+        id: result.id,
+      });
     return;
   } catch (error) {
     return {
@@ -104,7 +112,7 @@ export const uploadMovieImg = async (
     const imageBuffer = file.buffer;
     const imageName = uuidv4();
     const storageFile = storage.file(imageName);
-    await storageFile.save(imageBuffer, { contentType: "image/jpeg",  });
+    await storageFile.save(imageBuffer, { contentType: "image/jpeg" });
     const [url] = await storageFile.getSignedUrl({
       action: "read",
       expires: "03-09-2025", // Set an expiration date for the URL

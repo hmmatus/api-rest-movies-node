@@ -13,7 +13,10 @@ export const registerCustomerToDB = async (
     });
 
     if (authRequest) {
-      await db.collection("customers").doc().set(data);
+      await db.collection("customers").doc(authRequest.uid).set({
+        ...data,
+        id: authRequest.uid
+      });
     }
     return;
   } catch (error) {
@@ -36,9 +39,7 @@ export const getUserDataFromDB = async (
     } else {
       return {
         user: {
-          name: userData.name,
-          email: userData.email,
-          role: userData.role,
+          ...userData
         },
       };
     }
@@ -77,3 +78,22 @@ export const deleteUserFromDb = async (
     };
   }
 };
+
+// export const loginUserFromDb = async (
+//   email: string,
+//   password: string
+// ): Promise<{ error?: string, jwt?: string}> => {
+//   try {
+//     const result;
+//     if (!result) {
+//       throw new Error(`Error with ${result}`);
+//     }
+//     return {
+
+//     }
+//   } catch (error) {
+//     return {
+//       error: `${error}`,
+//     };
+//   }
+// };

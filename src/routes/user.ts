@@ -1,5 +1,10 @@
 import { Request, Response } from "express";
-import { UserI } from "../models/user.model";
+import {
+  UserAdminI,
+  UserCustomerI,
+  UserI,
+  UserRoleI,
+} from "../models/user.model";
 import {
   deleteUserFromDb,
   getUserDataFromDB,
@@ -8,9 +13,14 @@ import {
 } from "../controllers/userController";
 
 const user = {
-  registerUser: async (req: Request<{}, {}, UserI>, res: Response) => {
+  registerUser: async (
+    req: Request<{}, {}, UserCustomerI | UserAdminI>,
+    res: Response
+  ) => {
     const data = req.body;
+
     const result = await registerCustomerToDB(data);
+
     if (result?.error) {
       return res.status(400).send({
         error: result.error,
@@ -26,7 +36,7 @@ const user = {
     });
   },
   getUserData: async (
-    req: Request<{  userId: string }, {}, UserI>,
+    req: Request<{ userId: string }, {}, UserI>,
     res: Response
   ) => {
     const { userId } = req.params;
@@ -42,11 +52,11 @@ const user = {
     });
   },
   updateUser: async (
-    req: Request<{ userId: string }, {}, {user: UserI}>,
+    req: Request<{ userId: string }, {}, { user: UserI }>,
     res: Response
   ) => {
     const { userId } = req.params;
-    const {user} = req.body;
+    const { user } = req.body;
     const result = await updateUserDataFromDb(userId, user);
     if (result?.error) {
       return res.status(400).send({
@@ -58,7 +68,10 @@ const user = {
       user,
     });
   },
-  deleteUser: async (req: Request<{userId: string}, {}, UserI>, res: Response) => {
+  deleteUser: async (
+    req: Request<{ userId: string }, {}, UserI>,
+    res: Response
+  ) => {
     const { userId } = req.params;
     const result = await deleteUserFromDb(userId);
     if (result?.error) {
@@ -70,6 +83,18 @@ const user = {
       message: "User deleted successfully",
     });
   },
+  // loginUser: async (req: Request<{}, {}, {email: string, password: string}>, res: Response) => {
+  //   const {email, password} = req.body;
+  //   const result = await loginUserFromDb(email, password);
+  //   if (result?.error) {
+  //     return res.status(400).send({
+  //       error: result.error,
+  //     });
+  //   }
+  //   return res.send({
+  //     jwt:result.jwt,
+  //   });
+  // },
 };
 
 export default user;

@@ -4,6 +4,7 @@ import movies from "./movies";
 import user from "./user";
 import admin from "./admin";
 import multer from "multer";
+import verifyToken from "../middlewares/auth";
 const storageMulter = multer.memoryStorage(); // Store image data in memory as a Buffer
 const upload = multer({ storage: storageMulter });
 
@@ -24,10 +25,10 @@ router.delete("/cinemas/:id", cinema.deleteCinema);
 
 // * Admin
 
-router.post("/cinemas/:idCinema/admins", admin.registerAdmin);
-router.get("/cinemas/:idCinema/admins/:userId", admin.getAdminData);
-router.put("/cinemas/:idCinema/admins/:userId", admin.updateAdmin);
-router.delete("/cinemas/:idCinema/admins/:userId", admin.deleteAdmin)
+// router.post("/cinemas/:idCinema/admins", admin.registerAdmin);
+// router.get("/cinemas/:idCinema/admins/:userId", admin.getAdminData);
+// router.put("/cinemas/:idCinema/admins/:userId", admin.updateAdmin);
+// router.delete("/cinemas/:idCinema/admins/:userId", admin.deleteAdmin)
 
 // * Movies
 
@@ -38,7 +39,7 @@ router.put("/cinemas/:idCinema/movies/:idMovie", movies.updateMovie);
 router.delete("/cinemas/:idCinema/movies/:idMovie", movies.deleteMovie);
 
 // * User
-router.get("/users", user.getUserData)
+router.get("/users/:userId", verifyToken, user.getUserData)
 router.post("/users", user.registerUser);
 router.put("/users/:id", user.updateUser);
 router.delete("/users/:id", user.deleteUser);
