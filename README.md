@@ -23,6 +23,6 @@ npm run start #Run in prod
 
 ## .env structure
 
-```
-PORT=3000
+```bash
+PORT
 ```
