@@ -7,6 +7,11 @@ export interface FileI {
   buffer: Buffer;
   size: number;
 }
+
+export enum MovieOrderEnum {
+  likes = "likes",
+  default = "default"
+}
 export const movieSchema = yup.object({
   title: yup.string().required(),
   description: yup.string().required(),
@@ -34,4 +39,5 @@ export const movieSchema = yup.object({
 
 export interface MovieI extends yup.InferType<typeof movieSchema> {
   id: string;
+  countLikes: number;
 }

@@ -4,6 +4,7 @@ import {
   addMovieDB,
   deleteMovieDB,
   editMovieDB,
+  getAllMoviesFromDB,
   uploadMovieImg,
 } from "./movieDataAccess";
 
@@ -70,6 +71,22 @@ const movieController = {
     } catch (error) {
       res.status(404).send({
         message: (error as Error).message,
+      });
+    }
+  },
+  getAllMovies: async (req: Request<{}, {}, {}>, res: Response) => {
+    try {
+      const result = await getAllMoviesFromDB({
+        ...req.query,
+      });
+      res.send({
+        data: result.data,
+        currentPage: result.currentPage,
+        pages: result.pages
+      });
+    } catch (error) {
+      res.status(400).send({
+        error: (error as Error).message,
       });
     }
   },
