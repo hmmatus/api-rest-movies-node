@@ -1,5 +1,5 @@
 import * as firebase from "firebase-admin";
-import * as serviceAccount from "../../../key.json";
+import * as serviceAccount from "../../key.json";
 const configParams = {
   type: serviceAccount.type,
   projectId: serviceAccount.project_id,

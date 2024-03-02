@@ -31,7 +31,6 @@ const movies = {
   addMovie: async(req: Request<{idCinema: string}, {},MovieI>, res: Response) => {
     const data = req.body;
     const {idCinema} = req.params;
-    console.log(req.params);
     const result = await addMovieDB(idCinema,data);
     if (result?.error) {
       return res.status(400).send({
