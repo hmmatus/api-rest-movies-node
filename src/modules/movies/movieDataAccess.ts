@@ -21,7 +21,7 @@ export const addMovieDB = async (data: MovieI): Promise<{ data: MovieI }> => {
 
 export const uploadMovieImg = async (
   file: FileI
-): Promise<{ error?: string; url?: string }> => {
+): Promise<{url: string }> => {
   try {
     const imageBuffer = file.buffer;
     const imageName = uuidv4();
@@ -35,8 +35,30 @@ export const uploadMovieImg = async (
       url,
     };
   } catch (error) {
-    return {
-      error: `${error}`,
-    };
+    throw new Error((error as Error).message);
+  }
+};
+
+export const editMovieDB = async (movieId: string, data: Partial<MovieI>) => {
+  try {
+    await firestore
+      .collection("movies")
+      .doc(movieId)
+      .update({
+        ...data,
+      });
+  } catch (error) {
+    throw new Error((error as Error).message);
+  }
+};
+
+export const deleteMovieDB = async (
+  idMovie: string
+) => {
+  try {
+    await firestore.collection("movies").doc(idMovie).delete();
+    return;
+  } catch (error) {
+    throw new Error((error as Error).message);
   }
 };
