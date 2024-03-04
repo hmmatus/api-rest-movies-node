@@ -14,6 +14,7 @@ export const registerAdminToDB = async (
     if (authRequest) {
       await firestore.collection("admins").doc(authRequest.uid).set({
         ...data,
+        id: authRequest.uid,
         role: "admin"
       });
     }
