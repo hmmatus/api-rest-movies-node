@@ -5,6 +5,7 @@ import {
   deleteMovieDB,
   editMovieDB,
   getAllMoviesFromDB,
+  saveUpdatesMovie,
   uploadMovieImg,
 } from "./movieDataAccess";
 
@@ -82,7 +83,7 @@ const movieController = {
       res.send({
         data: result.data,
         currentPage: result.currentPage,
-        pages: result.pages
+        pages: result.pages,
       });
     } catch (error) {
       res.status(400).send({
@@ -90,6 +91,36 @@ const movieController = {
       });
     }
   },
+  saveUpdatesMovie: async (
+    req: Request<
+      {},
+      {},
+      {
+        data: {
+          movieId: string
+          title?: string;
+          rentAmount?: number;
+          saleAmount?: number;
+          userId: string;
+        };
+      }
+    >,
+    res: Response
+  ) => {
+    try {
+      const { data } = req.body;
+      await saveUpdatesMovie(data);
+      res.send({
+        message: "Updates saved correctly",
+      });
+    } catch (error) {
+      res.status(400).send({
+        error: (error as Error).message,
+      });
+    }
+  },
+  likeMovie: async (req: Request<{}, {}, {}>, res: Response) => {},
+  unLikeMovie: async (req: Request<{}, {}, {}>, res: Response) => {},
 };
 
 export default movieController;

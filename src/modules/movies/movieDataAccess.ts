@@ -66,14 +66,14 @@ export const getAllMoviesFromDB = async ({
   onlyAvailable,
   searchValue,
   limit = 10,
-  currentPage = 1
+  currentPage = 1,
 }: {
   orderBy?: MovieOrderEnum;
   onlyAvailable?: boolean;
   searchValue?: string;
   limit?: number;
-  currentPage?: number
-}): Promise<{ data?: MovieI[], currentPage: number, pages: number }> => {
+  currentPage?: number;
+}): Promise<{ data?: MovieI[]; currentPage: number; pages: number }> => {
   try {
     let query: firebase.firestore.Query<firebase.firestore.DocumentData> =
       firestore.collection("movies");
@@ -97,7 +97,10 @@ export const getAllMoviesFromDB = async ({
     const currentPageNumber = currentPage || 1;
 
     const startAt = (currentPageNumber - 1) * (limit || 10);
-    const querySnapshot = await query.offset(startAt).limit(limit || 10).get();
+    const querySnapshot = await query
+      .offset(startAt)
+      .limit(limit || 10)
+      .get();
     const movies: MovieI[] = [];
     querySnapshot.docs.forEach((doc) => {
       const movieData = doc.data();
@@ -117,7 +120,7 @@ export const getAllMoviesFromDB = async ({
     return {
       data: movies,
       currentPage,
-      pages: totalPages
+      pages: totalPages,
     };
   } catch (error) {
     throw new Error((error as Error).message);
@@ -145,6 +148,65 @@ export const getMovieById = async (
         countLikes: movieData.countLikes || 0,
       },
     };
+  } catch (error) {
+    throw new Error((error as Error).message);
+  }
+};
+
+export const saveUpdatesMovie = async (
+  data: {
+    movieId: string,
+    title?: string;
+    rentAmount?: number;
+    saleAmount?: number;
+    userId: string;
+  }
+) => {
+  try {
+    const snapshot = await firestore.collection("movies").doc(data.movieId).get();
+    const movieData = snapshot.data();
+    if (!movieData) {
+      throw new Error("Movie doesn't exist");
+    }
+    let updateData = {};
+    if ("title" in data) {
+      updateData = {
+        ...updateData,
+        title: data?.title,
+        prevTitle: movieData.title,
+      };
+    }
+    if ("rentAmount" in data) {
+      updateData = {
+        ...updateData,
+        rentAmount: data?.rentAmount,
+        prevRentAmount: movieData.rentAmount,
+      };
+    }
+    if ("saleAmount" in data) {
+      updateData = {
+        ...updateData,
+        saleAmount: data?.saleAmount,
+        prevTitle: movieData.title,
+      };
+    }
+    const result = await firestore
+      .collection("movies")
+      .doc(data.movieId)
+      .collection("logs")
+      .add({
+        ...updateData,
+        date: new Date(),
+        userId: data.userId
+      });
+    await firestore
+      .collection("movies")
+      .doc(data.movieId)
+      .collection("logs")
+      .doc(result.id)
+      .update({
+        id: result.id,
+      });
   } catch (error) {
     throw new Error((error as Error).message);
   }

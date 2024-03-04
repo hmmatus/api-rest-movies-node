@@ -17,7 +17,7 @@ router.post(
 );
 router.put(
   `/${API_VERSION}/movies/:idMovie`,
-  checkAdminExistence,
+  // checkAdminExistence,
   movieController.updateMovie
 );
 router.delete(
@@ -26,5 +26,6 @@ router.delete(
   movieController.deleteMovie
 );
 router.get(`/${API_VERSION}/movies`, movieController.getAllMovies);
+router.post(`/${API_VERSION}/movies/logs`, movieController.saveUpdatesMovie);
 
 export default router;
