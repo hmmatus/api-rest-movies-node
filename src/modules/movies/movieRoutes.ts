@@ -27,5 +27,6 @@ router.delete(
 );
 router.get(`/${API_VERSION}/movies`, movieController.getAllMovies);
 router.post(`/${API_VERSION}/movies/logs`, movieController.saveUpdatesMovie);
+router.post(`/${API_VERSION}/movies/like`, movieController.likeMovie);
 
 export default router;

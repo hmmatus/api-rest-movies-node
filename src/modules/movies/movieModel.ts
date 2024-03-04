@@ -37,7 +37,10 @@ export const movieSchema = yup.object({
   image: yup.string().required(),
 });
 
+interface LikesI {
+  idUser: string;
+}
 export interface MovieI extends yup.InferType<typeof movieSchema> {
   id: string;
-  countLikes: number;
+  likes: LikesI[];
 }

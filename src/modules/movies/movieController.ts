@@ -5,6 +5,7 @@ import {
   deleteMovieDB,
   editMovieDB,
   getAllMoviesFromDB,
+  likeMovieDB,
   saveUpdatesMovie,
   uploadMovieImg,
 } from "./movieDataAccess";
@@ -97,7 +98,7 @@ const movieController = {
       {},
       {
         data: {
-          movieId: string
+          movieId: string;
           title?: string;
           rentAmount?: number;
           saleAmount?: number;
@@ -119,7 +120,21 @@ const movieController = {
       });
     }
   },
-  likeMovie: async (req: Request<{}, {}, {}>, res: Response) => {},
+  likeMovie: async (
+    req: Request<{}, {}, { userId: string; movieId: string }>,
+    res: Response
+  ) => {
+    try {
+      await likeMovieDB(req.body.movieId, req.body.movieId);
+      res.send({
+        message: "Liked movie"
+      })
+    } catch (error) {
+      res.status(400).send({
+        error: (error as Error).message,
+      });
+    }
+  },
   unLikeMovie: async (req: Request<{}, {}, {}>, res: Response) => {},
 };
 

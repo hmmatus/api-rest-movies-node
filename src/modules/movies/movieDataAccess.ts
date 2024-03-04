@@ -13,7 +13,7 @@ export const addMovieDB = async (data: MovieI): Promise<{ data: MovieI }> => {
       data: {
         ...data,
         id: snapshot.id,
-        countLikes: 0,
+        likes: [],
       },
     };
   } catch (error) {
@@ -113,7 +113,7 @@ export const getAllMoviesFromDB = async ({
         rentAmount: movieData.rentAmount,
         saleAmount: movieData.saleAmount,
         availability: movieData.availability,
-        countLikes: movieData.countLikes,
+        likes: movieData.likes,
       };
       movies.push(movie);
     });
@@ -145,7 +145,7 @@ export const getMovieById = async (
         rentAmount: movieData.rentAmount,
         saleAmount: movieData.saleAmount,
         availability: movieData.availability,
-        countLikes: movieData.countLikes || 0,
+        likes: movieData.likes,
       },
     };
   } catch (error) {
@@ -153,17 +153,18 @@ export const getMovieById = async (
   }
 };
 
-export const saveUpdatesMovie = async (
-  data: {
-    movieId: string,
-    title?: string;
-    rentAmount?: number;
-    saleAmount?: number;
-    userId: string;
-  }
-) => {
+export const saveUpdatesMovie = async (data: {
+  movieId: string;
+  title?: string;
+  rentAmount?: number;
+  saleAmount?: number;
+  userId: string;
+}) => {
   try {
-    const snapshot = await firestore.collection("movies").doc(data.movieId).get();
+    const snapshot = await firestore
+      .collection("movies")
+      .doc(data.movieId)
+      .get();
     const movieData = snapshot.data();
     if (!movieData) {
       throw new Error("Movie doesn't exist");
@@ -197,7 +198,7 @@ export const saveUpdatesMovie = async (
       .add({
         ...updateData,
         date: new Date(),
-        userId: data.userId
+        userId: data.userId,
       });
     await firestore
       .collection("movies")
@@ -207,6 +208,17 @@ export const saveUpdatesMovie = async (
       .update({
         id: result.id,
       });
+  } catch (error) {
+    throw new Error((error as Error).message);
+  }
+};
+
+export const likeMovieDB = async (movieId: string, userId: string) => {
+  try {
+    const snapshot = firestore.collection("movies").doc(movieId);
+    await snapshot.update({
+      likes: firebase.firestore.FieldValue.arrayUnion({ userId }),
+    });
   } catch (error) {
     throw new Error((error as Error).message);
   }
