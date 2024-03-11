@@ -1,5 +1,5 @@
 import * as firebase from "firebase-admin";
-import * as serviceAccount from "../../../key.json";
+import * as serviceAccount from "../../key.json";
 const configParams = {
   type: serviceAccount.type,
   projectId: serviceAccount.project_id,
@@ -15,7 +15,7 @@ const configParams = {
 
 firebase.initializeApp({
   credential: firebase.credential.cert(configParams),
-  storageBucket: "gs://movies-challenge-2cfac.appspot.com"
+  storageBucket: "gs://movies-challenge-2cfac.appspot.com",
 });
 
 export const firestore = firebase.firestore();
