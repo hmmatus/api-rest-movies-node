@@ -1,5 +1,5 @@
-import { Request, Response } from "express";
-import { FileI, MovieI, movieSchema } from "./movieModel";
+import { type Request, type Response } from "express";
+import { type FileI, type MovieI, movieSchema } from "./movieModel";
 import {
   addMovieDB,
   deleteMovieDB,
@@ -29,7 +29,7 @@ const movieController = {
   addPicture: async (req: Request<{}, {}, { file: FileI }>, res: Response) => {
     try {
       const file = req.file;
-      if (!file) {
+      if (file == null) {
         throw new Error("No file uploaded");
       }
       const result = await uploadMovieImg(file);
@@ -44,7 +44,7 @@ const movieController = {
   },
   updateMovie: async (
     req: Request<{ idMovie: string }, {}, Partial<MovieI>>,
-    res: Response
+    res: Response,
   ) => {
     try {
       const data = req.body;
@@ -62,7 +62,7 @@ const movieController = {
   },
   deleteMovie: async (
     req: Request<{ idMovie: string }, {}, {}>,
-    res: Response
+    res: Response,
   ) => {
     try {
       const { idMovie } = req.params;
@@ -106,7 +106,7 @@ const movieController = {
         };
       }
     >,
-    res: Response
+    res: Response,
   ) => {
     try {
       const { data } = req.body;
@@ -122,20 +122,19 @@ const movieController = {
   },
   likeMovie: async (
     req: Request<{}, {}, { userId: string; movieId: string }>,
-    res: Response
+    res: Response,
   ) => {
     try {
       await likeMovieDB(req.body.movieId, req.body.movieId);
       res.send({
-        message: "Liked movie"
-      })
+        message: "Liked movie",
+      });
     } catch (error) {
       res.status(400).send({
         error: (error as Error).message,
       });
     }
   },
-  unLikeMovie: async (req: Request<{}, {}, {}>, res: Response) => {},
 };
 
 export default movieController;

@@ -15,7 +15,7 @@ const configParams = {
 
 firebase.initializeApp({
   credential: firebase.credential.cert(configParams),
-  storageBucket: "gs://movies-challenge-2cfac.appspot.com"
+  storageBucket: "gs://movies-challenge-2cfac.appspot.com",
 });
 
 export const firestore = firebase.firestore();

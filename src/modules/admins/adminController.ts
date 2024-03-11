@@ -1,15 +1,15 @@
-import { Request, Response } from "express";
-import { AdminI, adminSchema } from "./adminModel";
+import { type Request, type Response } from "express";
+import { type AdminI, adminSchema } from "./adminModel";
 import { registerAdminToDB } from "./adminDataAccess";
 
 const adminController = {
   registerAdmin: async (
     req: Request<{ idCinema: string }, {}, AdminI>,
-    res: Response
+    res: Response,
   ) => {
     try {
       const data = req.body;
-      adminSchema.validate(data);
+      await adminSchema.validate(data);
 
       const result = await registerAdminToDB(data);
       return res.send({

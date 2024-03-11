@@ -8,22 +8,22 @@ const router = express.Router();
 router.post(
   `/${API_VERSION}/movies`,
   checkAdminExistence,
-  movieController.registerMovie
+  movieController.registerMovie,
 );
 router.post(
   `/${API_VERSION}/movies/picture`,
   checkAdminExistence,
-  movieController.addPicture
+  movieController.addPicture,
 );
 router.put(
   `/${API_VERSION}/movies/:idMovie`,
   // checkAdminExistence,
-  movieController.updateMovie
+  movieController.updateMovie,
 );
 router.delete(
   `/${API_VERSION}/movies/:idMovie`,
   checkAdminExistence,
-  movieController.deleteMovie
+  movieController.deleteMovie,
 );
 router.get(`/${API_VERSION}/movies`, movieController.getAllMovies);
 router.post(`/${API_VERSION}/movies/logs`, movieController.saveUpdatesMovie);

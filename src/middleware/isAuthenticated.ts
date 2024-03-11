@@ -1,18 +1,22 @@
-import { Request, Response, NextFunction } from "express";
+import { type Request, type Response, type NextFunction } from "express";
 import { auth } from "../firebase";
 
-const verifyToken = async (req: Request, res: Response, next: NextFunction) => {
+const verifyToken = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
   const authHeader = req.headers.authorization;
 
-  if (authHeader) {
+  if (authHeader != null) {
     const idToken = authHeader.split(" ")[1];
-      auth
+    auth
       .verifyIdToken(idToken)
-      .then(function (decodedToken) {
-        return next();
+      .then(function () {
+        next();
       })
-      .catch(function (error) {
-        return res.sendStatus(403);
+      .catch(function () {
+        res.sendStatus(403);
       });
   } else {
     res.sendStatus(401);

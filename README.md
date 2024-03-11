@@ -1,6 +1,7 @@
 # API Rest Movies
 
 ## Getting Started
+
 First install the dependencies
 
 ```bash
@@ -19,7 +20,6 @@ npm run build #Build project
 npm run start #Run in prod
 
 ```
-
 
 ## .env structure
 

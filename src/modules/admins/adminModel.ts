@@ -1,4 +1,4 @@
-import  * as yup from "yup";
+import * as yup from "yup";
 
 export const adminSchema = yup.object({
   name: yup.string().required(),
@@ -7,7 +7,7 @@ export const adminSchema = yup.object({
     .string()
     .required("Password is required")
     .min(8, "Password must be at least 8 characters long"),
-})
+});
 
 export interface AdminI extends yup.InferType<typeof adminSchema> {
   id: string;
@@ -16,4 +16,3 @@ export interface AdminI extends yup.InferType<typeof adminSchema> {
   password: string;
   role: "admin";
 }
-

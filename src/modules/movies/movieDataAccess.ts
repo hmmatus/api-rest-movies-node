@@ -1,6 +1,6 @@
 import firebase from "firebase-admin";
 import { firestore, storage } from "../../firebase";
-import { FileI, MovieI, MovieOrderEnum } from "./movieModel";
+import { type FileI, type MovieI, MovieOrderEnum } from "./movieModel";
 import { v4 as uuidv4 } from "uuid";
 
 export const addMovieDB = async (data: MovieI): Promise<{ data: MovieI }> => {
@@ -39,7 +39,10 @@ export const uploadMovieImg = async (file: FileI): Promise<{ url: string }> => {
   }
 };
 
-export const editMovieDB = async (movieId: string, data: Partial<MovieI>) => {
+export const editMovieDB = async (
+  movieId: string,
+  data: Partial<MovieI>,
+): Promise<void> => {
   try {
     await firestore
       .collection("movies")
@@ -52,10 +55,9 @@ export const editMovieDB = async (movieId: string, data: Partial<MovieI>) => {
   }
 };
 
-export const deleteMovieDB = async (idMovie: string) => {
+export const deleteMovieDB = async (idMovie: string): Promise<void> => {
   try {
     await firestore.collection("movies").doc(idMovie).delete();
-    return;
   } catch (error) {
     throw new Error((error as Error).message);
   }
@@ -81,10 +83,10 @@ export const getAllMoviesFromDB = async ({
     if (orderBy === MovieOrderEnum.likes) {
       query = query.orderBy("countLikes", "asc");
     }
-    if (onlyAvailable) {
+    if (onlyAvailable ?? false) {
       query = query.where("availability", "==", true);
     }
-    if (searchValue) {
+    if (searchValue != null) {
       query = query
         .where("title", ">=", searchValue)
         .where("title", "<=", searchValue + "\uf8ff");
@@ -93,14 +95,11 @@ export const getAllMoviesFromDB = async ({
     const snapshot = await query.get();
     const totalMovies = snapshot.size;
 
-    const totalPages = Math.ceil(totalMovies / (limit || 10));
-    const currentPageNumber = currentPage || 1;
+    const totalPages = Math.ceil(totalMovies / limit);
+    const currentPageNumber = currentPage;
 
-    const startAt = (currentPageNumber - 1) * (limit || 10);
-    const querySnapshot = await query
-      .offset(startAt)
-      .limit(limit || 10)
-      .get();
+    const startAt = (currentPageNumber - 1) * limit;
+    const querySnapshot = await query.offset(startAt).limit(limit).get();
     const movies: MovieI[] = [];
     querySnapshot.docs.forEach((doc) => {
       const movieData = doc.data();
@@ -127,12 +126,12 @@ export const getAllMoviesFromDB = async ({
   }
 };
 export const getMovieById = async (
-  movieId: string
-): Promise<{ data?: MovieI }> => {
+  movieId: string,
+): Promise<{ data: MovieI }> => {
   try {
     const snapshot = await firestore.collection("movies").doc(movieId).get();
     const movieData = snapshot.data();
-    if (!movieData) {
+    if (movieData == null) {
       throw new Error("Movie doesn't exist");
     }
     return {
@@ -159,14 +158,14 @@ export const saveUpdatesMovie = async (data: {
   rentAmount?: number;
   saleAmount?: number;
   userId: string;
-}) => {
+}): Promise<void> => {
   try {
     const snapshot = await firestore
       .collection("movies")
       .doc(data.movieId)
       .get();
     const movieData = snapshot.data();
-    if (!movieData) {
+    if (movieData == null) {
       throw new Error("Movie doesn't exist");
     }
     let updateData = {};
@@ -213,7 +212,10 @@ export const saveUpdatesMovie = async (data: {
   }
 };
 
-export const likeMovieDB = async (movieId: string, userId: string) => {
+export const likeMovieDB = async (
+  movieId: string,
+  userId: string,
+): Promise<void> => {
   try {
     const snapshot = firestore.collection("movies").doc(movieId);
     await snapshot.update({

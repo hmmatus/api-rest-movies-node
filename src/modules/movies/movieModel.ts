@@ -10,7 +10,7 @@ export interface FileI {
 
 export enum MovieOrderEnum {
   likes = "likes",
-  default = "default"
+  default = "default",
 }
 export const movieSchema = yup.object({
   title: yup.string().required(),
@@ -18,21 +18,33 @@ export const movieSchema = yup.object({
   stock: yup
     .number()
     .required()
-    .test("greaterThanCero", "Value must be greater than 0", (value) => {
-      return value > 0;
-    }),
+    .test(
+      "greaterThanCero",
+      "Value must be greater than 0",
+      (value: number) => {
+        return value > 0;
+      },
+    ),
   rentAmount: yup
     .number()
     .required()
-    .test("greaterThanCero", "Value must be greater than 0", (value) => {
-      return value > 0;
-    }),
+    .test(
+      "greaterThanCero",
+      "Value must be greater than 0",
+      (value: number) => {
+        return value > 0;
+      },
+    ),
   saleAmount: yup
     .number()
     .required()
-    .test("greaterThanCero", "Value must be greater than 0", (value) => {
-      return value > 0;
-    }),
+    .test(
+      "greaterThanCero",
+      "Value must be greater than 0",
+      (value: number) => {
+        return value > 0;
+      },
+    ),
   availability: yup.string().required(),
   image: yup.string().required(),
 });

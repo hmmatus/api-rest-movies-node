@@ -1,5 +1,5 @@
-import dotenv from 'dotenv';
-import assert from 'assert';
+import dotenv from "dotenv";
+import assert from "assert";
 
 dotenv.config();
 
@@ -11,11 +11,10 @@ const {
   STORAGE_BUCKET,
   MESSAGING_SENDER_ID,
   APP_ID,
-  MEASUREMENT_ID
+  MEASUREMENT_ID,
 } = process.env;
 
-assert(PORT, 'Port is required');
-
+assert(PORT, "Port is required");
 
 export default {
   port: PORT,
@@ -26,6 +25,6 @@ export default {
     storageBucket: STORAGE_BUCKET,
     messagingSenderId: MESSAGING_SENDER_ID,
     appId: APP_ID,
-    measurementId: MEASUREMENT_ID
+    measurementId: MEASUREMENT_ID,
   },
 };

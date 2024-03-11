@@ -1,15 +1,15 @@
-import { Request, Response } from "express";
-import { UserI, userSchema } from "./userModel";
+import { type Request, type Response } from "express";
+import { type UserI, userSchema } from "./userModel";
 import { registerUserToDB } from "./userDataAccess";
 
 const userController = {
   registerUser: async (
     req: Request<{ idCinema: string }, {}, UserI>,
-    res: Response
+    res: Response,
   ) => {
     try {
       const data = req.body;
-      userSchema.validate(data);
+      await userSchema.validate(data);
 
       const result = await registerUserToDB(data);
       return res.send({

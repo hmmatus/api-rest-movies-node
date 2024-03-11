@@ -1,4 +1,4 @@
-import express, { Express, Request, Response } from "express";
+import express, { type Express } from "express";
 
 import cors from "cors";
 import config from "../config";
@@ -8,7 +8,7 @@ import movies from "./modules/movies/movieRoutes";
 import users from "./modules/users/userRoutes";
 
 const app: Express = express();
-const port = config.port || 3000;
+const port = config.port ?? 3000;
 
 app.use(cors());
 app.use(express.json());
