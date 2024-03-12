@@ -16,3 +16,10 @@ export interface UserI extends yup.InferType<typeof userSchema> {
   password: string;
   role: "user";
 }
+
+export interface UserResponseI {
+  id: string;
+  name: string;
+  email: string;
+  role: "user";
+}
