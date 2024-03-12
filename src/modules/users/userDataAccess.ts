@@ -1,5 +1,5 @@
 import { auth, firestore } from "../../firebase";
-import { UserResponseI, type UserI } from "./userModel";
+import { type UserResponseI, type UserI } from "./userModel";
 
 export const registerUserToDB = async (
   data: UserI,
