@@ -1,5 +1,10 @@
 import { type Request, type Response } from "express";
-import { type FileI, type MovieI, movieSchema } from "./movieModel";
+import {
+  type FileI,
+  type MovieI,
+  movieSchema,
+  type MovieOrderEnum,
+} from "./movieModel";
 import {
   addMovieDB,
   deleteMovieDB,
@@ -76,10 +81,28 @@ const movieController = {
       });
     }
   },
-  getAllMovies: async (req: Request<{}, {}, {}>, res: Response) => {
+  getAllMovies: async (
+    req: Request<
+      {},
+      {},
+      {},
+      {
+        orderBy?: MovieOrderEnum;
+        onlyAvailable?: boolean;
+        searchValue?: string;
+        limit: string;
+        currentPage: string;
+      }
+    >,
+    res: Response,
+  ) => {
     try {
+      const currentPage = parseInt(req.query.currentPage);
+      const limit = parseInt(req.query.limit);
       const result = await getAllMoviesFromDB({
         ...req.query,
+        limit,
+        currentPage,
       });
       res.send({
         data: result.data,

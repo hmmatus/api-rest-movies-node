@@ -87,11 +87,8 @@ export const getAllMoviesFromDB = async ({
       query = query.where("availability", "==", true);
     }
     if (searchValue != null) {
-      query = query
-        .where("title", ">=", searchValue)
-        .where("title", "<=", searchValue + "\uf8ff");
+      query = query.where("title", "==", searchValue);
     }
-
     const snapshot = await query.get();
     const totalMovies = snapshot.size;
 
