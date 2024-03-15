@@ -2,7 +2,10 @@ import express from "express";
 import { API_VERSION } from "../../config";
 import movieController from "./movieController";
 import { checkAdminExistence } from "../../middleware/isUserAdmin";
+import multer from "multer";
 
+const storageMulter = multer.memoryStorage(); // Store image data in memory as a Buffer
+const upload = multer({ storage: storageMulter });
 const router = express.Router();
 
 router.post(
@@ -12,7 +15,7 @@ router.post(
 );
 router.post(
   `/${API_VERSION}/movies/picture`,
-  checkAdminExistence,
+  upload.single("file"),
   movieController.addPicture,
 );
 router.put(
