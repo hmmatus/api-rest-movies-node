@@ -15,7 +15,7 @@ router.post(
 );
 router.post(
   `/${API_VERSION}/movies/picture`,
-  upload.single("file"),
+  [checkAdminExistence, upload.single("file")],
   movieController.addPicture,
 );
 router.put(
