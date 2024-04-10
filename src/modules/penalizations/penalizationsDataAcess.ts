@@ -1,5 +1,8 @@
 import { firestore } from "../../firebase";
-import { type TransactionI } from "../transactions/transactionModel";
+import {
+  TransactionType,
+  type TransactionI,
+} from "../transactions/transactionModel";
 import {
   PenalizationReasonEnum,
   PenalizationStatusEnum,
@@ -73,6 +76,7 @@ export async function checkTransactionsExpired(): Promise<void> {
   try {
     const snapshot = await firestore
       .collection("transactions")
+      .where("type", "==", TransactionType.RENT)
       .where("expirationData", "<", new Date())
       .get();
     snapshot.forEach(async (doc) => {
