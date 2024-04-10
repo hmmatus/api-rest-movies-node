@@ -33,6 +33,6 @@ export const checkAdminExistence = async (
     // If the user exists in the admins collection, proceed to the next middleware or route handler
     next();
   } catch (error) {
-    res.status(500).json({ message: "Internal server error" });
+    res.status(500).json({ message: (error as Error).message });
   }
 };
