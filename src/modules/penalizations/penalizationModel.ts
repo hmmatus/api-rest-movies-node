@@ -6,13 +6,13 @@ export interface PenalizationI {
   status: PenalizationStatusEnum;
 }
 
-enum PenalizationReasonEnum {
+export enum PenalizationReasonEnum {
   LATE_RETURN = "late_return",
   DAMAGE = "damage",
   LOST = "lost",
 }
 
-enum PenalizationStatusEnum {
+export enum PenalizationStatusEnum {
   PENDING = "pending",
   PAID = "paid",
   CANCELED = "canceled",

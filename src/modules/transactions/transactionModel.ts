@@ -1,5 +1,5 @@
 export interface TransactionI {
-  id?: string;
+  id: string;
   description: string;
   type: TransactionType;
   idMovie: string;
