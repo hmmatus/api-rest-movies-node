@@ -8,11 +8,11 @@ import {
 
 export const transactionsController = {
   saveTransaction: async (
-    req: Request<{}, {}, { transaction: TransactionI }>,
+    req: Request<{}, {}, TransactionI>,
     res: Response,
   ) => {
     try {
-      const result = await saveTransactionToDB(req.body.transaction);
+      const result = await saveTransactionToDB(req.body);
       return res.json({
         ...result,
       });

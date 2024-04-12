@@ -1,5 +1,7 @@
 import { firestore } from "../../firebase";
+import { updateTransaction } from "../transactions/transactionDataAccess";
 import {
+  TransactionStatusEnum,
   TransactionType,
   type TransactionI,
 } from "../transactions/transactionModel";
@@ -77,7 +79,8 @@ export async function checkTransactionsExpired(): Promise<void> {
     const snapshot = await firestore
       .collection("transactions")
       .where("type", "==", TransactionType.RENT)
-      .where("expirationData", "<", new Date())
+      .where("expirationDate", "<", new Date())
+      .where("status", "==", TransactionStatusEnum.PENDING)
       .get();
     snapshot.forEach(async (doc) => {
       const rental = doc.data() as TransactionI;
@@ -89,6 +92,9 @@ export async function checkTransactionsExpired(): Promise<void> {
         idTransaction: rental?.id,
         amount: 10,
       };
+      await updateTransaction(rental.id, {
+        status: TransactionStatusEnum.PENALIZED,
+      });
       await addPenalizationDB(penalization);
     });
   } catch (error) {
