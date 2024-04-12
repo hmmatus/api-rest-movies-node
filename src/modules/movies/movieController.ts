@@ -14,6 +14,7 @@ import {
   saveUpdatesMovie,
   uploadMovieImg,
 } from "./movieDataAccess";
+import { getUserId } from "../../firebase/utils/getUserId";
 
 const movieController = {
   registerMovie: async (req: Request<{}, {}, MovieI>, res: Response) => {
@@ -97,12 +98,17 @@ const movieController = {
     res: Response,
   ) => {
     try {
+      let userId: string | undefined;
+      if (req.headers.authorization != null) {
+        userId = (await getUserId(req.headers.authorization)) ?? "";
+      }
       const currentPage = parseInt(req.query.currentPage);
       const limit = parseInt(req.query.limit);
       const result = await getAllMoviesFromDB({
         ...req.query,
         limit,
         currentPage,
+        userId: userId ?? undefined,
       });
       res.send({
         data: result.data,
@@ -148,7 +154,7 @@ const movieController = {
     res: Response,
   ) => {
     try {
-      await likeMovieDB(req.body.movieId, req.body.movieId);
+      await likeMovieDB(req.body.movieId, req.body.userId);
       res.send({
         message: "Liked movie",
       });

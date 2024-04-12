@@ -69,12 +69,14 @@ export const getAllMoviesFromDB = async ({
   searchValue,
   limit = 10,
   currentPage = 1,
+  userId,
 }: {
   orderBy?: MovieOrderEnum;
   onlyAvailable?: boolean;
   searchValue?: string;
   limit?: number;
   currentPage?: number;
+  userId?: string;
 }): Promise<{ data?: MovieI[]; currentPage: number; pages: number }> => {
   try {
     let query: firebase.firestore.Query<firebase.firestore.DocumentData> =
@@ -109,7 +111,7 @@ export const getAllMoviesFromDB = async ({
         rentAmount: movieData.rentAmount,
         saleAmount: movieData.saleAmount,
         availability: movieData.availability,
-        likes: movieData.likes,
+        isMovieLiked: movieData.likes.includes(userId) ?? false,
       };
       movies.push(movie);
     });
@@ -124,6 +126,7 @@ export const getAllMoviesFromDB = async ({
 };
 export const getMovieById = async (
   movieId: string,
+  userId?: string,
 ): Promise<{ data: MovieI }> => {
   try {
     const snapshot = await firestore.collection("movies").doc(movieId).get();
@@ -141,7 +144,7 @@ export const getMovieById = async (
         rentAmount: movieData.rentAmount,
         saleAmount: movieData.saleAmount,
         availability: movieData.availability,
-        likes: movieData.likes,
+        isMovieLiked: movieData.likes.includes(userId) ?? false,
       },
     };
   } catch (error) {
@@ -216,7 +219,7 @@ export const likeMovieDB = async (
   try {
     const snapshot = firestore.collection("movies").doc(movieId);
     await snapshot.update({
-      likes: firebase.firestore.FieldValue.arrayUnion({ userId }),
+      likes: firebase.firestore.FieldValue.arrayUnion(userId),
     });
   } catch (error) {
     throw new Error((error as Error).message);

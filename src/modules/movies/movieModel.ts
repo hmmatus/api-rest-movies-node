@@ -54,5 +54,6 @@ interface LikesI {
 }
 export interface MovieI extends yup.InferType<typeof movieSchema> {
   id: string;
-  likes: LikesI[];
+  likes?: LikesI[];
+  isMovieLiked?: boolean;
 }
