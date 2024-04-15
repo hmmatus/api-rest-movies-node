@@ -3,6 +3,7 @@ import { API_VERSION } from "../../config";
 import movieController from "./movieController";
 import { checkAdminExistence } from "../../middleware/isUserAdmin";
 import multer from "multer";
+import verifyToken from "../../middleware/isAuthenticated";
 
 const storageMulter = multer.memoryStorage(); // Store image data in memory as a Buffer
 const upload = multer({ storage: storageMulter });
@@ -30,6 +31,14 @@ router.delete(
 );
 router.get(`/${API_VERSION}/movies`, movieController.getAllMovies);
 router.post(`/${API_VERSION}/movies/logs`, movieController.saveUpdatesMovie);
-router.post(`/${API_VERSION}/movies/like`, movieController.likeMovie);
-
+router.post(
+  `/${API_VERSION}/movies/like`,
+  verifyToken,
+  movieController.likeMovie,
+);
+router.post(
+  `/${API_VERSION}/movies/dislike`,
+  verifyToken,
+  movieController.dislikeMovie,
+);
 export default router;

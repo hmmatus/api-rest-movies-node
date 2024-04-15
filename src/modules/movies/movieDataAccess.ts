@@ -225,3 +225,17 @@ export const likeMovieDB = async (
     throw new Error((error as Error).message);
   }
 };
+
+export const dislikeMovieDB = async (
+  movieId: string,
+  userId: string,
+): Promise<void> => {
+  try {
+    const snapshot = firestore.collection("movies").doc(movieId);
+    await snapshot.update({
+      likes: firebase.firestore.FieldValue.arrayRemove(userId),
+    });
+  } catch (error) {
+    throw new Error((error as Error).message);
+  }
+};

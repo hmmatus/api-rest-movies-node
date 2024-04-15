@@ -6,8 +6,6 @@ export const getUserId = async (token: string): Promise<string | null> => {
     const idToken = token.split(" ")[1];
     // Verify the JWT token
     const decodedToken = await auth.verifyIdToken(idToken);
-    console.log("🚀 ~ getUserId ~ decodedToken:", decodedToken);
-
     // Return the user ID
     return decodedToken.uid;
   } catch (error) {

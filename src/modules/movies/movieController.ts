@@ -8,6 +8,7 @@ import {
 import {
   addMovieDB,
   deleteMovieDB,
+  dislikeMovieDB,
   editMovieDB,
   getAllMoviesFromDB,
   likeMovieDB,
@@ -157,6 +158,21 @@ const movieController = {
       await likeMovieDB(req.body.movieId, req.body.userId);
       res.send({
         message: "Liked movie",
+      });
+    } catch (error) {
+      res.status(400).send({
+        error: (error as Error).message,
+      });
+    }
+  },
+  dislikeMovie: async (
+    req: Request<{}, {}, { userId: string; movieId: string }>,
+    res: Response,
+  ) => {
+    try {
+      await dislikeMovieDB(req.body.movieId, req.body.userId);
+      res.send({
+        message: "Movie disliked",
       });
     } catch (error) {
       res.status(400).send({
