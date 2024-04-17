@@ -19,5 +19,6 @@ firebase.initializeApp({
 });
 
 export const firestore = firebase.firestore();
+firestore.settings({ ignoreUndefinedProperties: true });
 export const auth = firebase.auth();
 export const storage = firebase.storage().bucket();

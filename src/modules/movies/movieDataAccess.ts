@@ -83,7 +83,7 @@ export const getAllMoviesFromDB = async ({
       firestore.collection("movies");
 
     if (orderBy === MovieOrderEnum.likes) {
-      query = query.orderBy("countLikes", "asc");
+      query = query.where("likes", "array-contains", userId);
     }
     if (onlyAvailable ?? false) {
       query = query.where("availability", "==", true);
