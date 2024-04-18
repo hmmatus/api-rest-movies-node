@@ -49,6 +49,16 @@ export const getTransactionsByUserId = async (
 ): Promise<GetTransactionsResponseParams> => {
   const { limit, currentPage } = data;
   try {
+    if (
+      !(
+        limit !== 0 &&
+        currentPage !== 0 &&
+        !isNaN(limit) &&
+        !isNaN(currentPage)
+      )
+    ) {
+      throw new Error("Limit and currentPage are required");
+    }
     const query: firebase.firestore.Query<firebase.firestore.DocumentData> =
       firestore.collection("transactions");
     query.where("idUser", "==", data.idUser);
