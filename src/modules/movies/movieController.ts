@@ -8,12 +8,14 @@ import {
 import {
   addMovieDB,
   deleteMovieDB,
+  dislikeMovieDB,
   editMovieDB,
   getAllMoviesFromDB,
   likeMovieDB,
   saveUpdatesMovie,
   uploadMovieImg,
 } from "./movieDataAccess";
+import { getUserId } from "../../firebase/utils/getUserId";
 
 const movieController = {
   registerMovie: async (req: Request<{}, {}, MovieI>, res: Response) => {
@@ -97,12 +99,17 @@ const movieController = {
     res: Response,
   ) => {
     try {
+      let userId: string | undefined;
+      if (req.headers.authorization != null) {
+        userId = (await getUserId(req.headers.authorization)) ?? "";
+      }
       const currentPage = parseInt(req.query.currentPage);
       const limit = parseInt(req.query.limit);
       const result = await getAllMoviesFromDB({
         ...req.query,
         limit,
         currentPage,
+        userId: userId ?? undefined,
       });
       res.send({
         data: result.data,
@@ -148,9 +155,24 @@ const movieController = {
     res: Response,
   ) => {
     try {
-      await likeMovieDB(req.body.movieId, req.body.movieId);
+      await likeMovieDB(req.body.movieId, req.body.userId);
       res.send({
         message: "Liked movie",
+      });
+    } catch (error) {
+      res.status(400).send({
+        error: (error as Error).message,
+      });
+    }
+  },
+  dislikeMovie: async (
+    req: Request<{}, {}, { userId: string; movieId: string }>,
+    res: Response,
+  ) => {
+    try {
+      await dislikeMovieDB(req.body.movieId, req.body.userId);
+      res.send({
+        message: "Movie disliked",
       });
     } catch (error) {
       res.status(400).send({

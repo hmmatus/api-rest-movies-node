@@ -6,6 +6,7 @@ export interface TransactionI {
   idUser: string;
   expirationDate?: string;
   qty: number;
+  status: TransactionStatusEnum;
 }
 
 export interface GetTransactionsRequestParams {
@@ -33,4 +34,11 @@ export interface DetailTransactionResponse {
   expirationDate: string | null;
   qty: number;
   type: TransactionType;
+}
+
+export enum TransactionStatusEnum {
+  PENDING = "pending",
+  PAID = "paid",
+  PENALIZED = "penalized",
+  CANCELED = "canceled",
 }

@@ -7,6 +7,7 @@ import {
   type GetTransactionsRequestParams,
   type GetTransactionsResponseParams,
   type TransactionI,
+  TransactionStatusEnum,
 } from "./transactionModel";
 import type firebase from "firebase-admin";
 
@@ -26,7 +27,9 @@ export const saveTransactionToDB = async (
     } else {
       formData = data;
     }
-    const snapshot = await firestore.collection("transactions").add(formData);
+    const snapshot = await firestore
+      .collection("transactions")
+      .add({ ...formData, status: TransactionStatusEnum.PENDING });
     await firestore.collection("transactions").doc(snapshot.id).update({
       id: snapshot.id,
     });
@@ -46,6 +49,16 @@ export const getTransactionsByUserId = async (
 ): Promise<GetTransactionsResponseParams> => {
   const { limit, currentPage } = data;
   try {
+    if (
+      !(
+        limit !== 0 &&
+        currentPage !== 0 &&
+        !isNaN(limit) &&
+        !isNaN(currentPage)
+      )
+    ) {
+      throw new Error("Limit and currentPage are required");
+    }
     const query: firebase.firestore.Query<firebase.firestore.DocumentData> =
       firestore.collection("transactions");
     query.where("idUser", "==", data.idUser);
@@ -67,6 +80,7 @@ export const getTransactionsByUserId = async (
         type: transactionData.type,
         idUser: transactionData.idUser,
         qty: transactionData.qty,
+        status: transactionData.status,
       };
       transactions.push(transaction);
     });
@@ -109,3 +123,21 @@ export const getTransactionDetailDB = async (
     throw new Error((error as Error).message);
   }
 };
+
+// Update a document
+export async function updateTransaction(
+  docId: string,
+  data: Partial<TransactionI>,
+): Promise<TransactionI> {
+  try {
+    const docRef = firestore.collection("transactions").doc(docId);
+    await docRef.update({
+      ...data,
+    });
+    const updatedDoc = await docRef.get();
+    const updatedData = updatedDoc.data() as TransactionI;
+    return updatedData;
+  } catch (error) {
+    throw new Error((error as Error).message);
+  }
+}
